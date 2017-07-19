@@ -14,7 +14,7 @@ module.exports = {
     resolve: {
         extensions: ['.js']
     },
-
+    devtool: 'eval-source-map',
     // TODO: Add loader for CSS and do post processing
     module: {
         rules: [
@@ -37,11 +37,11 @@ module.exports = {
             compress: {
                 warnings: false,
                 screw_ie8: true,
-                drop_console: true,
+                // drop_console: true,
                 drop_debugger: true,
             },
             comments: false,
-            console: false,
+            // console: false,
             mangle: true,
             sourceMap: true,
         }),
