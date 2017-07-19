@@ -33,8 +33,6 @@ const applyProps = (element, props) => {
             } else if (isPrimitive(prop)) {
                 element[propName] = prop;
             }
-
-            throw new Error('Invalid prop');
         });
 };
 
