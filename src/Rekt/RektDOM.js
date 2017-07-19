@@ -1,6 +1,8 @@
 /* global document */
 import { isRektText } from '../RektComponent/RektComponentUtils';
 
+const isPrimitive = obj => ((typeof obj === 'number') || (typeof obj === 'string'));
+
 /**
  * TODO: Move this to shared Utils folder
  * 
@@ -27,14 +29,22 @@ const applyProps = (element, props) => {
                         element[propName][attribute] = prop[attribute];
                     });
 
-                // The prop is normal
-            } else if ((typeof prop === 'number') || (typeof prop === 'string')) {
+            // The prop is normal
+            } else if (isPrimitive(prop)) {
                 element[propName] = prop;
             }
+
+            throw new Error('Invalid prop');
         });
 };
 
 const RektDOM = {
+    /**
+     * FIXME: Rename this
+     * 
+     * @param  {RektText|RektElement} virtualElement
+     * @return {Element}
+     */
     createElement(virtualElement) {
         if (isRektText(virtualElement)) {
             return document.createTextNode(virtualElement.text);
@@ -50,6 +60,12 @@ const RektDOM = {
         return element;
     },
 
+    /**
+     * FIXME: I don't think this will work the way I want it to
+     * 
+     * @param  {RektText|RektElement} virtualElement
+     * @param  {Element} root
+     */
     render(virtualElement, root) {
         root.appendChild(RektDOM.createElement(virtualElement));
     },

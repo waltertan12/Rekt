@@ -1,3 +1,8 @@
+/**
+ * @param {Number}                 type  Corresponds to a diff move e.g. INSERT or REORDER
+ * @param {RektText|RektComponent} node
+ * @param {RektPatch}              patch
+ */
 const RektPatch = function RektPatch(type, node, patch) {
     this.type = Number(type);
     this.node = node;
