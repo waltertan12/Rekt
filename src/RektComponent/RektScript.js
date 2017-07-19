@@ -31,13 +31,14 @@ const generateChildren = children => children
  */
 const RektScript = (tagName, properties, ...children) => {
     const props = properties;
+    const key = properties.key
 
     // Remove key from the passed down props as it is only pertinent for the diff, not the RektElement
     if (props.hasOwnProperty('key')) {
         props.key = undefined;
     }
 
-    return new RektElement(tagName, props, generateChildren(children), properties.key);
+    return new RektElement(tagName, props, generateChildren(children), key);
 };
 
 export default RektScript;

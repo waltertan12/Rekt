@@ -5,10 +5,11 @@ import { isRektElement, isRektText } from '../RektComponent/RektComponentUtils';
 
 const diffChildren = (prevChildren, nextChildren, patches, currentPatch, index) => {
     let diffs = ListDiff(prevChildren, nextChildren, 'key')
+    console.log(prevChildren, nextChildren, diffs)
     nextChildren = diffs.children // FIXME: Ehhhh
 
     if (diffs.moves.length) {
-        currentPatch.push({ type: 'REORDER' }) // TODO: Add a reorder patch
+        currentPatch.push({ type: 'REORDER', payload: diffs }) // TODO: Add a reorder patch
     }
 
     // This is the child to the left of the current working child i.e. it is the left sibling
