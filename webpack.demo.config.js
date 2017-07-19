@@ -8,12 +8,14 @@ module.exports = {
         './demo/index.js'
     ],
     output: {
-        path: path.resolve(__dirname, 'demo'),
-        filename: 'app.js'
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'demo.js'
     },
     resolve: {
         extensions: ['.js']
     },
+
+    // TODO: Add loader for CSS and do post processing
     module: {
         rules: [
             {
