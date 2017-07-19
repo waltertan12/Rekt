@@ -1,6 +1,6 @@
-import HyperScript from './src/HyperScript'
+import RektScript from './src/RektComponent/RektScript'
 import RektDOM from './src/Rekt/RektDOM'
-import VirtualNode from './src/VirtualDOM/VirtualNode'
-import VirtualText from './src/VirtualDOM/VirtualText'
+import RektElement from './src/RektComponent/RektElement'
+import RektText from './src/RektComponent/RektText'
 
-export default { HyperScript, RektDOM, VirtualNode, VirtualText }
+export default { RektScript, RektDOM, RektElement, RektText }

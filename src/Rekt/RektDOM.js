@@ -1,5 +1,5 @@
 /* global document */
-import { isVirtualText } from '../VirtualDOM/VirtualUtils';
+import { isRektText } from '../RektComponent/RektComponentUtils';
 
 /**
  * TODO: Move this to shared Utils folder
@@ -36,7 +36,7 @@ const applyProps = (element, props) => {
 
 const RektDOM = {
     createElement(virtualElement) {
-        if (isVirtualText(virtualElement)) {
+        if (isRektText(virtualElement)) {
             return document.createTextNode(virtualElement.text);
         }
         const element = document.createElement(virtualElement.tagName);

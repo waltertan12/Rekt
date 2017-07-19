@@ -5,6 +5,8 @@
   ],
   "rules": {
     "no-prototype-builtins": [ "warn" ],
-    "indent": [ "error", 4 ]
+    "indent": [ "error", 4 ],
+    "max-len": [ "error", 120 ],
+    "no-param-reassign": [ "warn" ]
   }
 }

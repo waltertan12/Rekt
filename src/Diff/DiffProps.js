@@ -13,58 +13,58 @@ const getDiff = diff => (diff || {});
 const isObject = obj => (obj && typeof obj === 'object' && Array.isArray(obj) === false);
 
 /**
- * @param  {Object}           oldProps
- * @param  {Object}           newProps
+ * @param  {Object}           prevProps
+ * @param  {Object}           nextProps
  * @return {Object|undefined} diff
  */
-const DiffProps = (oldProps, newProps) => {
+const DiffProps = (prevProps, nextProps) => {
     let diff;
 
     Object
-        .keys(oldProps)
-        .forEach((oldPropKey) => {
+        .keys(prevProps)
+        .forEach((prevPropKey) => {
             // A prop has been removed
-            if (!newProps.hasOwnProperty(oldPropKey)) {
+            if (!nextProps.hasOwnProperty(prevPropKey)) {
                 diff = getDiff(diff);
-                diff[oldPropKey] = undefined;
+                diff[prevPropKey] = undefined;
             }
 
-            const oldProp = oldProps[oldPropKey];
-            const newProp = newProps[oldPropKey];
+            const prevProp = prevProps[prevPropKey];
+            const nextProp = nextProps[prevPropKey];
 
             // Props are the same!
-            if (oldProp === newProp) {
+            if (prevProp === nextProp) {
 
                 // Both props are objects
-            } else if (isObject(oldProp) && isObject(newProp)) {
+            } else if (isObject(prevProp) && isObject(nextProp)) {
                 // The prototypes differ, mark the change
-                if (Object.getPrototypeOf(oldProp) !== Object.getPrototypeOf(newProp)) {
+                if (Object.getPrototypeOf(prevProp) !== Object.getPrototypeOf(nextProp)) {
                     diff = getDiff(diff);
-                    diff[oldPropKey] = newProp;
+                    diff[prevPropKey] = nextProp;
 
                     // Prototypes are the same, so recursively check if their keys and values are the same
                 } else {
-                    const propDiff = DiffProps(oldProp, newProp);
+                    const propDiff = DiffProps(prevProp, nextProp);
                     if (propDiff) {
                         diff = getDiff(diff);
-                        diff[oldProp] = propDiff;
+                        diff[prevProp] = propDiff;
                     }
                 }
 
                 // Prop is a different primitive or has been removed
             } else {
                 diff = getDiff(diff);
-                diff[oldPropKey] = newProp;
+                diff[prevPropKey] = nextProp;
             }
         });
 
     // Check if there are any new props that need to be added
     Object
-        .keys(newProps)
-        .forEach((newPropKey) => {
-            if (!oldProps.hasOwnProperty(newPropKey)) {
+        .keys(nextProps)
+        .forEach((nextPropKey) => {
+            if (!prevProps.hasOwnProperty(nextPropKey)) {
                 diff = getDiff(diff);
-                diff[newPropKey] = newProps[newPropKey];
+                diff[nextPropKey] = nextProps[nextPropKey];
             }
         });
 

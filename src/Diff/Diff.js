@@ -1,8 +1,8 @@
+import ListDiff from 'list-diff2';
 import DiffChildren from './DiffChildren';
 import DiffProps from './DiffProps';
-import ListDiff from 'list-diff2';
-import VirtualPatch from '../VirtualDOM/VirtualPatch';
-import { isVirtualNode, isVirtualText } from '../VirtualDOM/VirtualUtils';
+import RektPatch from '../RektComponent/RektPatch';
+import { isRektElement, isRektText } from '../RektComponent/RektComponentUtils';
 
 const walk = (oldNode, newNode, patches, index) => {
     const currentPatch = [];
@@ -11,14 +11,14 @@ const walk = (oldNode, newNode, patches, index) => {
     if (!newNode) {
 
     // The node is a TextNode, check if the text is the same
-    } else if (isVirtualText(oldNode) && isVirtualText(newNode)) {
+    } else if (isRektText(oldNode) && isRektText(newNode)) {
         if (oldNode.text !== newNode.text) {
             currentPatch.push({}); // TODO
         }
 
     // Nodes are the same, diff the props
     } else if (oldNode.tagName === newNode.tagName && oldNode.key === newNode.key) {
-        const propsPatch = diffProps(oldNode, newNode);
+        const propsPatch = DiffProps(oldNode, newNode);
         if (propsPatch) {
             currentPatch.push({}); // TODO
         }

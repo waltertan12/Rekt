@@ -1,4 +1,4 @@
-const DiffChildren = (oldChildren, newChildren, patches, currentPatch, index) => {
+const DiffChildren = (prevChildren, nextChildren, patches, currentPatch, index) => {
 
 };
 
