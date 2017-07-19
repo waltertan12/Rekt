@@ -47,7 +47,7 @@ const DiffProps = (prevProps, nextProps) => {
                     const propDiff = DiffProps(prevProp, nextProp);
                     if (propDiff) {
                         diff = getDiff(diff);
-                        diff[prevProp] = propDiff;
+                        diff[prevPropKey] = propDiff;
                     }
                 }
 
