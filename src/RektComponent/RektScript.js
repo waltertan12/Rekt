@@ -1,12 +1,11 @@
-import RektElement from './RektElement';
+import RektNode from './RektNode';
 import RektText from './RektText';
-import { isRektElement, isRektText } from './RektComponentUtils';
+import { isRektNode, isRektText } from './RektComponentUtils';
 
 /**
- * Recursively create RektScript children
+ * Recursively create RektNodes and RektTexts
  * 
  * @param  {mixed[]} children
- * @return {mixed}
  */
 const generateChildren = children => children
     .map((child) => {
@@ -14,7 +13,7 @@ const generateChildren = children => children
             return new RektText(child);
         } else if (typeof child === 'number') {
             return new RektText(String(child));
-        } else if (isRektText(child) || isRektElement(child)) {
+        } else if (isRektText(child) || isRektNode(child)) {
             return child;
         } else if (Array.isArray(child)) {
             return generateChildren(child);
@@ -24,21 +23,21 @@ const generateChildren = children => children
     });
 
 /**
- * @param  {String}                       tagName
- * @param  {Object}                       properties
- * @param  {...[RektElement|RektText]} children
- * @return {RektElement}
+ * @param  {String}                 tagName
+ * @param  {Object}                 properties
+ * @param  {...[RektNode|RektText]} children
+ * @return {RektNode}
  */
 const RektScript = (tagName, properties, ...children) => {
     const props = properties;
-    const key = properties.key
+    const key = properties.key;
 
-    // Remove key from the passed down props as it is only pertinent for the diff, not the RektElement
+    // Remove key from the passed down props as it is only pertinent for the diff, not the RektNode
     if (props.hasOwnProperty('key')) {
         props.key = undefined;
     }
 
-    return new RektElement(tagName, props, generateChildren(children), key);
+    return new RektNode(tagName, props, generateChildren(children), key);
 };
 
 export default RektScript;

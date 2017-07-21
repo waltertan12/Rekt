@@ -23,7 +23,7 @@ const App = (
     )
 );
 
-const AlteredApp = (
+const nextApp = (
     RektScript('div', { className: 'container-two' },
         RektScript('h1', { className: 'heading' }, 'Rekt?'),
         RektScript('p', { className: 'paragraph'}, 'This! page! is built using an incomplete imitation of React called Rekt!'),
@@ -43,11 +43,9 @@ const AlteredApp = (
     )
 );
 
-RektDOM.render(
-    App,
-    document.getElementById('app'),
-);
+let appRoot = document.getElementById('app');
+RektDOM.mount(App, appRoot);
 
-console.log(App)
-console.log(AlteredApp)
-console.log(Diff(App, AlteredApp))
+console.log(App);
+console.log(nextApp);
+console.log(Diff(App, nextApp));

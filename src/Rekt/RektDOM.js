@@ -1,71 +1,67 @@
 /* global document */
+import { isObject, isPrimitive } from '../Utils/Utils';
 import { isRektText } from '../RektComponent/RektComponentUtils';
 
-const isPrimitive = obj => ((typeof obj === 'number') || (typeof obj === 'string'));
-
 /**
- * TODO: Move this to shared Utils folder
+ * Applies virtual props to an acutal DOM node
  * 
- * @param  {mixed}    obj
- * @return {Boolean}
+ * @param  {Node|Element} node
+ * @param  {Object}       props
  */
-const isObject = obj => (obj && typeof obj === 'object' && Array.isArray(obj) === false);
-
-const applyProps = (element, props) => {
+const applyProps = (node, props) => {
     Object
         .keys(props)
         .forEach((propName) => {
             const prop = props[propName];
 
+            // FIXME: This sucks
             // The prop is an event listener
             if (typeof prop === 'function' && propName.startsWith('on')) {
-                element.addEventListener(propName.substring(2), prop);
+                node.addEventListener(propName.substring(2), prop);
 
             // The prop is an object
             } else if (isObject(prop)) {
                 Object
                     .keys(prop)
                     .forEach((attribute) => {
-                        element[propName][attribute] = prop[attribute];
+                        node[propName][attribute] = prop[attribute];
                     });
 
             // The prop is normal
             } else if (isPrimitive(prop)) {
-                element[propName] = prop;
+                node[propName] = prop;
             }
         });
 };
 
 const RektDOM = {
     /**
-     * FIXME: Rename this
-     * 
-     * @param  {RektText|RektElement} virtualElement
-     * @return {Element}
+     * @param  {RektText|RektNode} virtualNode
+     * @return {Node|Element}
      */
-    createElement(virtualElement) {
-        if (isRektText(virtualElement)) {
-            return document.createTextNode(virtualElement.text);
+    renderNode(virtualNode) {
+        if (isRektText(virtualNode)) {
+            return document.createTextNode(virtualNode.text);
         }
-        const element = document.createElement(virtualElement.tagName);
+        const node = document.createElement(virtualNode.tagName);
 
-        applyProps(element, virtualElement.props);
+        applyProps(node, virtualNode.props);
 
-        virtualElement.children
-            .map(RektDOM.createElement)
-            .forEach(element.appendChild.bind(element));
+        virtualNode.children
+            .map(RektDOM.renderNode)
+            .forEach(node.appendChild.bind(node));
 
-        return element;
+        return node;
     },
 
     /**
-     * FIXME: I don't think this will work the way I want it to
+     * Mounts a Rekt component onto a DOM node
      * 
-     * @param  {RektText|RektElement} virtualElement
-     * @param  {Element} root
+     * @param {RektText|RektNode} virtualNode
+     * @param {Node|Element}      root
      */
-    render(virtualElement, root) {
-        root.appendChild(RektDOM.createElement(virtualElement));
+    mount(virtualNode, root) {
+        root.appendChild(RektDOM.renderNode(virtualNode));
     },
 };
 

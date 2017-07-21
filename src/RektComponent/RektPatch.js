@@ -1,7 +1,9 @@
 /**
+ * Represents an actionable diff
+ * 
  * @param {Number}                 type  Corresponds to a diff move e.g. INSERT or REORDER
- * @param {RektText|RektComponent} node
- * @param {RektPatch}              patch
+ * @param {RektText|RektComponent} node  The virtual node that needs to be updated
+ * @param {*}                      patch The patch (or update) for the virtual node
  */
 const RektPatch = function RektPatch(type, node, patch) {
     this.type = Number(type);
@@ -10,10 +12,10 @@ const RektPatch = function RektPatch(type, node, patch) {
 };
 
 RektPatch.NONE = 0;
-RektPatch.REKT_TEXT = 1;
-RektPatch.REKT_NODE = 2;
+RektPatch.TEXT = 1;
+RektPatch.ELEMENT = 2;
 RektPatch.PROPS = 3;
-RektPatch.ORDER = 4;
+RektPatch.REORDER = 4;
 RektPatch.INSERT = 5;
 RektPatch.REMOVE = 6;
 

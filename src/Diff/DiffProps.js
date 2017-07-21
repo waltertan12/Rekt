@@ -1,16 +1,10 @@
+import { isObject } from '../Utils/Utils';
+
 /**
  * @param  {Object|undefined} diff
  * @return {Object}
  */
 const getDiff = diff => (diff || {});
-
-/**
- * TODO: Move this to shared Utils folder
- * 
- * @param  {mixed}    obj
- * @return {Boolean}
- */
-const isObject = obj => (obj && typeof obj === 'object' && Array.isArray(obj) === false);
 
 /**
  * @param  {Object}           prevProps
@@ -35,14 +29,14 @@ const DiffProps = (prevProps, nextProps) => {
             // Props are the same!
             if (prevProp === nextProp) {
 
-                // Both props are objects
+            // Both props are objects
             } else if (isObject(prevProp) && isObject(nextProp)) {
                 // The prototypes differ, mark the change
                 if (Object.getPrototypeOf(prevProp) !== Object.getPrototypeOf(nextProp)) {
                     diff = getDiff(diff);
                     diff[prevPropKey] = nextProp;
 
-                    // Prototypes are the same, so recursively check if their keys and values are the same
+                // Prototypes are the same, so recursively check if their keys and values are the same
                 } else {
                     const propDiff = DiffProps(prevProp, nextProp);
                     if (propDiff) {
@@ -51,7 +45,7 @@ const DiffProps = (prevProps, nextProps) => {
                     }
                 }
 
-                // Prop is a different primitive or has been removed
+            // Prop is a different primitive or has been removed
             } else {
                 diff = getDiff(diff);
                 diff[prevPropKey] = nextProp;
