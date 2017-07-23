@@ -4,6 +4,7 @@ import RektPatch from '../RektComponent/RektPatch';
 import { isRektNode, isRektText } from '../RektComponent/RektComponentUtils';
 
 const diffChildren = (prevNode, nextNode, patches, currentPatch, index) => {
+    // FIXME: Write a Levenshtein edit distance...
     const prevChildren = prevNode.children;
     let nextChildren = nextNode.children;
     const diffs = ListDiff(prevChildren, nextChildren, 'key');
@@ -26,14 +27,44 @@ const diffChildren = (prevNode, nextNode, patches, currentPatch, index) => {
         // Why doesn't it diff against the whole tree? Because that would make the diff O(n^3)
         // Additionally, it's a nice heuristic because in the DOM, objects don't generally move from part of a tree
         if (prevSibling && (prevSibling.count > 0)) {
-            currentIndex = currentIndex + prevSibling.count + 1;
+            currentIndex += prevSibling.count + 1;
         } else {
             currentIndex += 1;
         }
 
-        walk(prevChild, nextChild, patches, currentIndex);
         prevSibling = prevChild;
+
+        shittyWalk(prevChild, nextChild, patches, currentIndex);
     });
+};
+
+const shittyWalk = (prevNode, nextNode, patches, index) => {
+    const currentPatch = [];
+    if (!nextNode) {
+        // The list diff should take care of this case
+        // Otherwise we would create a REMOVE patch
+    } else if (isRektText(prevNode) && isRektText(nextNode)) {
+        // If the text nodes do not have the same text, replace it; otherwise, do nothing
+        if (prevNode.text !== nextNode.text) {
+            currentPatch.push(new RektPatch(RektPatch.TEXT, prevNode, nextNode)); 
+        } 
+    } else if (isRektNode(prevNode) && isRektNode(nextNode) && prevNode.tagName == nextNode.tagName && prevNode.key === nextNode.key) {
+        const propsPatch = DiffProps(prevNode.props, nextNode.props);
+        if (propsPatch) {
+            currentPatch.push(new RektPatch(RektPatch.PROPS, prevNode, propsPatch));
+        }
+
+        // Diff the children now
+        diffChildren(prevNode, nextNode, patches, currentPatch, index);
+
+    // Nodes are different, replace them
+    } else {
+        currentPatch.push(new RektPatch(RektPatch.ELEMENT, prevNode, nextNode));
+    }
+
+    if (currentPatch.length) {
+        patches[index] = currentPatch;
+    }
 };
 
 const walk = (prevNode, nextNode, patches, index) => {
@@ -73,7 +104,7 @@ const walk = (prevNode, nextNode, patches, index) => {
                 currentPatch.push(new RektPatch(RektPatch.ELEMENT, prevNode, nextNode));
             }
 
-        // The prevous node is not an node, let's add a new node
+        // The prevous node is a text node, replace it with a normal node
         } else {
             currentPatch.push(new RektPatch(RektPatch.ELEMENT, prevNode, nextNode));
         }
@@ -82,18 +113,13 @@ const walk = (prevNode, nextNode, patches, index) => {
     } else {
         currentPatch.push(new RektPatch(RektPatch.ELEMENT, prevNode, nextNode));
     }
-
-    // Add patches, if there are any
-    if (currentPatch.length) {
-        patches[index] = currentPatch;
-    }
 };
 
 const Diff = (prevTree, nextTree) => {
     const index = 0;
     const patches = {};
 
-    walk(prevTree, nextTree, patches, index);
+    shittyWalk(prevTree, nextTree, patches, index);
 
     return patches;
 };

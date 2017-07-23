@@ -14,7 +14,7 @@ const RektNode = function RektNode(tagName, props, children, key) {
     this.tagName = tagName;
     this.props = props;
     this.children = children;
-    this.key = key ? String(key) : undefined;
+    this.key = (key === 0 || key) ? String(key) : undefined;
     this.count = children.length +
         children.reduce((count, child) => {
             if (isRektNode(child)) {

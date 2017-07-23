@@ -61,7 +61,10 @@ const RektDOM = {
      * @param {Node|Element}      root
      */
     mount(virtualNode, root) {
-        root.appendChild(RektDOM.renderNode(virtualNode));
+        const appNode = RektDOM.renderNode(virtualNode);
+        root.appendChild(appNode);
+
+        return appNode;
     },
 };
 

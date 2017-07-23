@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
+    "babel-jest": "^20.0.3",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -29,5 +30,11 @@
   },
   "dependencies": {
     "list-diff2": "^0.1.4"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "testRegex": "/test/.*"
   }
 }

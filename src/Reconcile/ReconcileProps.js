@@ -33,6 +33,7 @@ const removeProp = (node, propKey, propValue, prevProps) => {
  * @param  {Object|undefined} prevProps
  */
 const reconcileObjectProp = (node, propKey, prop, propPatches, prevProps) => {
+    // TODO: Figure out what to do with this
     let prevProp;
     if (prevProps) {
         prevProp = prevProps[propKey];
@@ -43,7 +44,6 @@ const reconcileObjectProp = (node, propKey, prop, propPatches, prevProps) => {
             .keys(prop)
             .forEach((styleName) => {
                 const styleValue = prop[styleName];
-
                 if (styleValue === undefined) {
                     node.style[styleName] = '';
                 } else {
@@ -64,7 +64,7 @@ const ReconcileProps = (node, propPatches, prevProps) => {
         .forEach((propKey) => {
             const prop = propPatches[propKey];
             if (prop === undefined) {
-                removeProp(node, propKey, propValue, prevProps);
+                removeProp(node, propKey, prop, prevProps);
             } else if (isObject(prop)) {
                 reconcileObjectProp(node, propKey, prop, propPatches, prevProps);
             } else {
